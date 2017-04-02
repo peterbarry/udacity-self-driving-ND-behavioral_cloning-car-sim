@@ -19,7 +19,8 @@ measurements = []
 data_files=["data/udacity/driving_log.csv"]
 
 #camera_steering_angle_correction = [0.1,0,-0.1]
-camera_steering_angle_correction = [0.22,0,-0.22]
+print("*************** UPDATED angle correction had error in code **************")
+camera_steering_angle_correction = [0.0,0.22,-0.22]
 
 for  cfilename in data_files:
 	print("Opening: ", cfilename)
