@@ -1,16 +1,15 @@
 
-
 import csv
 import cv2
 import numpy as np
 
 
 #http://stackoverflow.com/questions/19068085/shift-image-content-with-opencv
-Mat translateImg(Mat &img, int offsetx, int offsety){
-    Mat trans_mat = (Mat_<double>(2,3) << 1, 0, offsetx, 0, 1, offsety);
-    warpAffine(img,img,trans_mat,img.size());
-    return trans_mat;
-}
+#Mat translateImg(Mat &img, int offsetx, int offsety){
+#    Mat trans_mat = (Mat_<double>(2,3) << 1, 0, offsetx, 0, 1, offsety);
+#    warpAffine(img,img,trans_mat,img.size());
+#    return trans_mat;
+#}
 
 
 lines = []
