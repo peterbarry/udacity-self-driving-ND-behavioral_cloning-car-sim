@@ -17,11 +17,10 @@ import random
 samples_total = []
 measurements = []
 
-data_files=["data/udacity/driving_log.csv",
-	"data/udacity-dup-test1/driving_log.csv"]
+data_files=["data/udacity/driving_log.csv"]
 
 #camera_steering_angle_correction = [0.1,0,-0.1]
-camera_steering_angle_correction = [0.0,0.22,-0.22]
+camera_steering_angle_correction = [0.0,0.2,-0.2]
 
 for  cfilename in data_files:
 	lines = []
@@ -84,12 +83,15 @@ from sklearn.model_selection import  train_test_split
 train_samples, validation_samples,train_measurements,validation_measurements = train_test_split(samples_total, measurements,  test_size=0.2)
 
 
-def generator(samples,meass ,batch_size=32):
+number_of_samples_returned_per_yield = (32)
+
+def generator(samples,meass ,batch_size=number_of_samples_returned_per_yield):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
         #shuffled full list outside
 
-        for offset in range(0, num_samples, batch_size):
+	#batch size / 2 as we generate 2 samples each round.
+        for offset in range(0, num_samples, int(batch_size/2)):
             batch_samples = samples[offset:offset+batch_size]
             batch_meas = meass[offset:offset+batch_size]
             images = []
@@ -118,8 +120,8 @@ def generator(samples,meass ,batch_size=32):
 
 
 # compile and train the model using the generator function
-train_generator = generator(train_samples,train_measurements, batch_size=32)
-validation_generator = generator(validation_samples,validation_measurements, batch_size=32)
+train_generator = generator(train_samples,train_measurements, batch_size=number_of_samples_returned_per_yield)
+validation_generator = generator(validation_samples,validation_measurements, batch_size=number_of_samples_returned_per_yield)
 
 
 input_image_shape = (160,320,3)
@@ -171,11 +173,15 @@ print(model.summary())
 
 #model.fit(X_train,y_train, validation_split=0.2,shuffle=True,nb_epoch=10, verbose=1)
 
-model.fit_generator(train_generator, 
-                    samples_per_epoch=len(train_samples), 
-                    validation_data=validation_generator,
-                    nb_val_samples=len(validation_samples), nb_epoch=3)
+#model.fit_generator(train_generator, 
+#                    samples_per_epoch=len(train_samples), 
+#                    validation_data=validation_generator,
+#                    nb_val_samples=len(validation_samples), nb_epoch=5)
 
+model.fit_generator(train_generator, 
+                    steps_per_epoch=len(train_samples)/number_of_samples_returned_per_yield, 
+                    validation_data=validation_generator,
+                    validation_steps=len(validation_samples), nb_epoch=5, verbose=1)
 
 model.save('model.h5')
 
