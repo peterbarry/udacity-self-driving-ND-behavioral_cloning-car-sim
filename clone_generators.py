@@ -17,7 +17,12 @@ import random
 samples_total = []
 measurements = []
 
-data_files=["data/udacity/driving_log.csv"]
+data_files=["data/udacity/driving_log.csv",
+		"data/full-lap-reverse/driving_log.csv",
+		"data/full-lap-1/driving_log.csv",
+		"data/full-lap-reverse2/driving_log.csv",
+		"data/drive-at-bridge-2/driving_log.csv",
+		"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"]
 
 #camera_steering_angle_correction = [0.1,0,-0.1]
 camera_steering_angle_correction = [0.0,0.2,-0.2]
@@ -64,7 +69,7 @@ samples_total,measurements=zip(*c)
 
 for iter in range(10):
 	randval = random.randrange(0,len(samples_total))
-	print (" ** file name samples: " + samples_total[randval] + " angle: " +  str(measurements[randval]))
+	#print (" ** file name samples: " + samples_total[randval] + " angle: " +  str(measurements[randval]))
 
 
 
@@ -178,10 +183,10 @@ print(model.summary())
 #                    validation_data=validation_generator,
 #                    nb_val_samples=len(validation_samples), nb_epoch=5)
 
-model.fit_generator(train_generator, 
-                    steps_per_epoch=len(train_samples)/number_of_samples_returned_per_yield, 
+model.fit_generator(generator=train_generator, 
+                    steps_per_epoch=int(len(train_samples)/number_of_samples_returned_per_yield), 
                     validation_data=validation_generator,
-                    validation_steps=len(validation_samples), nb_epoch=5, verbose=1)
+                    validation_steps=int(len(validation_samples)/number_of_samples_returned_per_yield), epochs=5, verbose=1)
 
 model.save('model.h5')
 
