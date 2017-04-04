@@ -23,12 +23,12 @@ data_files=["data/udacity/driving_log.csv",
                 "data/full-lap-1/driving_log.csv",
                 "data/full-lap-reverse2/driving_log.csv",
                 #"data/drive-at-bridge-2/driving_log.csv",
-                #"data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
                 #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
 	]
 
 
-camera_steering_angle_correction = [0.0,0.08,-0.08]
+camera_steering_angle_correction = [0.0,0.1,-0.1]
 
 for  cfilename in data_files:
 	lines = []
@@ -87,6 +87,8 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 from keras.regularizers import l2
 from keras import optimizers
+from keras.utils import plot_model
+
 
 
 
@@ -230,7 +232,10 @@ adam = optimizers.Adam(lr=learning_rate)
 
 model.compile(loss='mse',optimizer=adam)
 
+
 print(model.summary())
+#plot_model(model, to_file='model.png')
+
 
 
 #model.fit(X_train,y_train, validation_split=0.2,shuffle=True,nb_epoch=10, verbose=1)
