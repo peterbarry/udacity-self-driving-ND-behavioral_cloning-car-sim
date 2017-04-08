@@ -16,7 +16,8 @@ lines = []
 images = []
 measurements = []
 
-data_files=["data/udacity/driving_log.csv"]
+data_files=["data/udacity/driving_log.csv",
+	"data/full-lap-reverse/driving_log.csv"]	
 
 #camera_steering_angle_correction = [0.1,0,-0.1]
 print("*************** UPDATED angle correction had error in code **************")
@@ -37,7 +38,7 @@ for  cfilename in data_files:
 			source_path=line[x]
 			filename = source_path.split('/')[-1]
 			current_path = cfilename.split('/')[0] + "/" + cfilename.split('/')[1] +  '/IMG/' + filename
-			#print ("Loading Image: " + current_path)
+			print ("Loading Image: " + current_path)
 			image = cv2.imread(current_path)
 			images.append(image)
 			measurement = float(line[3])

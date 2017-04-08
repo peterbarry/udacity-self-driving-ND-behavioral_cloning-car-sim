@@ -17,15 +17,19 @@ import random
 samples_total = []
 measurements = []
 
+
 data_files=["data/udacity/driving_log.csv",
-		"data/full-lap-reverse/driving_log.csv",
-		"data/full-lap-1/driving_log.csv",
-		"data/full-lap-reverse2/driving_log.csv",
-		"data/drive-at-bridge-2/driving_log.csv",
-		"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"]
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+	]
+
 
 #camera_steering_angle_correction = [0.1,0,-0.1]
-camera_steering_angle_correction = [0.0,0.2,-0.2]
+camera_steering_angle_correction = [0.0,0.12,-0.12]
 
 for  cfilename in data_files:
 	lines = []

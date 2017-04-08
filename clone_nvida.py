@@ -1,4 +1,3 @@
-False
 import csv
 import cv2
 import numpy as np
@@ -22,13 +21,17 @@ data_files=["data/udacity/driving_log.csv",
                 "data/full-lap-reverse/driving_log.csv",
                 "data/full-lap-1/driving_log.csv",
                 "data/full-lap-reverse2/driving_log.csv",
-                #"data/drive-at-bridge-2/driving_log.csv",
-                "data/first-sand-trap-recovery-1/driving_log.csv"
-                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+                "data/recover-lap-data-corner-with-sandy-margin-2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-3/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv",
+                #"data/last-corner-1/driving_log.csv",
+                "data/last-corner-2/driving_log.csv"
 	]
 
 
-camera_steering_angle_correction = [0.0,0.1,-0.1]
+camera_steering_angle_correction = [0.0,0.15,-0.15]
 
 for  cfilename in data_files:
 	lines = []
@@ -97,7 +100,7 @@ from sklearn.model_selection import  train_test_split
 number_of_samples_returned_per_yield = (32)
 learning_rate = 0.001 # default for Adam optimiser.
 
-use_dropout = False
+use_dropout_pooling = True
 dropout_value= 0.5
 weight_reg=0.0
 
@@ -173,7 +176,7 @@ model.add(Convolution2D(nb_filter=36,
                         #W_regularizer=l2(weight_reg)))
                         ))
         #model.add(MaxPooling2D(pool_size=))
-if use_dropout:
+if use_dropout_pooling:
     model.add(Dropout(dropout_value))
 
 model.add(Activation('relu'))
@@ -186,7 +189,7 @@ model.add(Convolution2D(nb_filter=48,
                         #W_regularizer=l2(weight_reg)))
                         ))
         #model.add(MaxPooling2D(pool_size=pool_size))
-if use_dropout:
+if use_dropout_pooling:
         model.add(Dropout(dropout_value))
 model.add(Activation('relu'))
 
@@ -198,7 +201,7 @@ model.add(Convolution2D(nb_filter=64,
                         #W_regularizer=l2(weight_reg)))
                         ))
         #model.add(MaxPooling2D(pool_size=pool_size))
-if use_dropout:
+if use_dropout_pooling:
         model.add(Dropout(dropout_value))
 model.add(Activation('relu'))
     # CNN Layer 5
@@ -209,7 +212,7 @@ model.add(Convolution2D(nb_filter=64,
                         #W_regularizer=l2(weight_reg)))
                         ))
         #model.add(MaxPooling2D(pool_size=pool_size))
-if use_dropout:
+if use_dropout_pooling:
         model.add(Dropout(dropout_value))
 model.add(Activation('relu'))
 # Flatten
