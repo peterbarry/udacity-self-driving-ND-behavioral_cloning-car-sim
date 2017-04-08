@@ -1,0 +1,488 @@
+
+In writeup
+ Mention concern in appoach as our test data is simular to model data and we are looping back and updaing the model - high chance it will overfit and not generalise even with ddropout ect..
+
+model tuning is data dependant, took backward steps when new data was added.
+
+
+
+
+Followed instrucions
+1) got to bridge with center only images
+2) add left right images - 0.1 went off quikcly
+3) cropped images ( with left and right) ran off on curve.
+4) angle correction 0.15 crashed.. before bridge.. sometimes went to bridge.
+5) angle left/right angel to 0.3 - wide oscilations - but is more centered overall - overshoots on osc on cornder
+6) update angle left/right to 0.25 
+* This network also does not improve past epoch 2
+38572/38572 [==============================] - 32s - loss: 0.0760 - val_loss: 0.0443
+Epoch 2/5
+38572/38572 [==============================] - 29s - loss: 0.0389 - val_loss: 0.0443
+Epoch 3/5
+38572/38572 [==============================] - 30s - loss: 0.0370 - val_loss: 0.0428
+Epoch 4/5
+38572/38572 [==============================] - 29s - loss: 0.0353 - val_loss: 0.0435
+Epoch 5/5
+38572/38572 [==============================] - 30s - loss: 0.0339 - val_loss: 0.0452
+
+* 0.25 oscillates alot... got past lake, hit bridge
+* update and leave at 0.2
+
+Running at :0.2
+
+38572/38572 [==============================] - 34s - loss: 0.1044 - val_loss: 0.0466
+Epoch 2/5
+38572/38572 [==============================] - 31s - loss: 0.0404 - val_loss: 0.0431
+Epoch 3/5
+38572/38572 [==============================] - 29s - loss: 0.0380 - val_loss: 0.0452
+Epoch 4/5
+38572/38572 [==============================] - 29s - loss: 0.0361 - val_loss: 0.0462
+Epoch 5/5
+38572/38572 [==============================] - 28s - loss: 0.0347 - val_loss: 0.0496
+pjbarry@testuser:~/car-nd-class/udacity-self-driving-ND-behavioral_cloning-car-sim$ 
+
+did not do very well, oscilated and ran over curve recovered 
+Crashed into bridge.
+
+
+For fun - update the left/wight comp angle to be opp and see run :  failed straight away.
+A
+
+***************
+run with angle -.22 +- and 10 epochs
+
+*****
+
+Added generators
+Added - lots more data - reverse, forward - went off at corner before bridge. Oscilates a lot.
+
+Opening:  data/udacity/driving_log.csv
+Processing 24108 images
+Opening:  data/full-lap-reverse/driving_log.csv
+Processing 39429 images
+Opening:  data/full-lap-1/driving_log.csv
+Processing 62568 images
+Opening:  data/full-lap-reverse2/driving_log.csv
+Processing 87816 images
+Opening:  data/drive-at-bridge-2/driving_log.csv
+Processing 91563 images
+Opening:  data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv
+Processing 95400 images
+: 0, name: TITAN X (Pascal), pci bus id: 0000:4b:00.0)
+2385/2385 [==============================] - 140s - loss: 0.0804 - val_loss: 0.0144
+Epoch 2/5
+2384/2385 [============================>.] - ETA: 0s - loss: 0.0128 ^[[5;5~
+
+
+2385/2385 [==============================] - 164s - loss: 0.0128 - val_loss: 0.0114
+Epoch 3/5
+2385/2385 [==============================] - 136s - loss: 0.0117 - val_loss: 0.0116
+Epoch 4/5
+2385/2385 [==============================] - 143s - loss: 0.0111 - val_loss: 0.0109
+Epoch 5/5
+2385/2385 [==============================] - 145s - loss: 0.0110 - val_loss: 0.0121
+
+
+CRASHED AT Trun after bridge.
+
+*************************************************
+
+Update angles to 0.1
+
+Stoped oscilations significant.
+Again crashed at dirt track
+followed tires as a track
+
+
+
+*************************************************
+
+remove the extra training around bridge. AND 0.2 angle.
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+        #       "data/drive-at-bridge-2/driving_log.csv",
+        #       "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+CRASHED AT BRIDGE
+
+*************************************************
+
+ Crashed on 0.1 with all data files
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+camera_steering_angle_correction = [0.0,0.1,-0.1]
+
+*************************************************
+
+
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+camera_steering_angle_correction = [0.0,0.12,-0.12]
+epoch 3
+
+CRASHED at start
+
+*****************************************************
+
+Go to epoch 5
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+camera_steering_angle_correction = [0.0,0.12,-0.12]
+
+iCRASHED!!
+
+*****************************************************
+
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                #"data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+#camera_steering_angle_correction = [0.1,0,-0.1]
+camera_steering_angle_correction = [0.0,0.12,-0.12]
+
+epoch 5
+2017-04-03 07:28:12.547531: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: TITAN X (Pascal), pci bus id: 0000:4b:00.0)
+2385/2385 [==============================] - 130s - loss: 0.1485 - val_loss: 0.0084
+Epoch 2/5
+2385/2385 [==============================] - 138s - loss: 0.0073 - val_loss: 0.0072
+Epoch 3/5
+2384/2385 [============================>.] - ETA: 0s - loss: 0.0068  
+
+
+
+2385/2385 [==============================] - 129s - loss: 0.0068 - val_loss: 0.0071
+Epoch 4/5
+2385/2385 [==============================] - 133s - loss: 0.0064 - val_loss: 0.0066
+Epoch 5/5
+2385/2385 [==============================] - 127s - loss: 0.0064 - val_loss: 0.0074
+
+Ran until --- > Close call a few times, crashed at sand trap drove down sand trap.
+
+*****************************************
+i
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+#camera_steering_angle_correction = [0.1,0,-0.1]
+camera_steering_angle_correction = [0.0,0.12,-0.12]
+
+epoch 5:
+
+Crashed at first water 
+
+------------------------------------------------------------------------
+
+NVIDA NETWORK
+
+All files
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+dorpout 0.4
+Angle 0.9
+
+Massive overshoot/swings +-25deg swings.
+
+Crash before bridge
+
+---------------------
+
+All files
+No dropout.
+angle 0.8
+2621/2621 [==============================] - 171s - loss: 0.0801 - val_loss: 0.0883
+
+
+oscilates a lot not as bad as precious, but a lot.
+crahses at: stuck on bridge due to osc
+
+
+*****************************************
+
+data_files=["data/udacity/driving_log.csv",
+ Only standard daata - A
+602/602 [==============================] - 32s - loss: 0.1523 - val_loss: 0.1604
+Crashed before bridge.
+
+******************************************
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                #"data/first-sand-trap-recovery-1/driving_log.csv",
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+No dropout.
+
+ANGLES WERE in error 0.8 instead of 0.08 - large swings.
+
+
+*********************************************
+
+2195/2195 [==============================] - 140s - loss: 0.0045 - val_loss: 0.0048
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+use_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+angle = 0.08
+
+
+came close near bridge - need to increase angle 
+got past bridge
+got around sand trap corner - just.
+Almost went off at corner after conter after trap.
+ **** DID FULL LAP BUT HIT CURBS  ****
+
+*****************************
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+use_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+angle = 0.09
+
+2195/2195 [==============================] - 121s - loss: 0.0047 - val_loss: 0.0051
+
+Failed AT dirt track - attepted to take the dirt track.
+
+********************************************
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+use_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+angle = .09
+
+Crashed  before bridge
+
+*****************************************************************************
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+use_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+Angle = .1
+
+FULL LAP hits margin 2 curves after bridge.
+
+-----------------------------------------------------------
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy margin-2/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+use_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+Angle = .e_dropout = False
+dropout_value= 0.5
+weight_reg=0.0A
+Angle = .12
+i
+Over the yellow line..
+crash before sandy track.
+
+
+***********************************************
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-3/driving_log.csv",
+                #"data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
+                #"data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+camera_steering_angle_correction = [0.0,0.11,-0.11]
+no dropout.
+dropout_value= 0.5
+weight_reg=0.0A
+
+ran off at last corner into lake - touched yellow line after bridge anyway.
+
+((((((((((((((((((((((((((((((((((((((((
+
+All files
+and dropout 0.5 %
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-3/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+camera_steering_angle_correction = [0.0,0.12,-0.12]
+
+VERY GOOD - ran over very slightyl on the last tricky corner.. drove full laps though!!!
+!!!!!!!!!
+Kept going around laps.. 
+
+******************************************
+
+All files
+and dropout 0.5 %
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-3/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv"
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+        ]
+
+
+camera_steering_angle_correction = [0.0,0.15,-0.15]
+
+So close - on straight after difficult conrner took a left vere.. need more lap data around that track section..
+
+Gather more data..
+
+*******************************************
+
+
+data_files=["data/udacity/driving_log.csv",
+                "data/full-lap-reverse/driving_log.csv",
+                "data/full-lap-1/driving_log.csv",
+                "data/full-lap-reverse2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-2/driving_log.csv",
+                "data/recover-lap-data-corner-with-sandy-margin-3/driving_log.csv",
+                "data/drive-at-bridge-2/driving_log.csv",
+                "data/first-sand-trap-recovery-1/driving_log.csv",
+                "data/drive-at-bridge-and-sandy-turn-multipe-times/driving_log.csv"
+                "data/last-corner-1/driving_log.csv"
+        ]
+
+camera_steering_angle_correction = [0.0,0.15,-0.15]
+and dropout 0.5 %
+
+
+
+
+
+**************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
