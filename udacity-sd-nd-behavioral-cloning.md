@@ -1,4 +1,4 @@
-#**Behavioral Cloning**
+***Behavioral Cloning***
 
 The following is a summary of the udacity car-nd behavioral cloning project.
 
@@ -6,7 +6,7 @@ The project entails capturing of driving steering wheel angles wheel driving on 
 
 ---
 
-**Behavioral Cloning Project**
+***Behavioral Cloning Project***
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -23,7 +23,7 @@ The goals / steps of this project are the following:
 
 
 
-**Code and Data repository**
+***Code and Data repository***
 
 The code, models and training dataset is uploaded to a public github repo.
 https://github.com/peterbarry/udacity-self-driving-ND-behavioral_cloning-car-sim/
@@ -36,7 +36,7 @@ My project includes the following files:
 * udacity-self-driving-ND-behavioral-cloning-sim.md  summarizing the results
 
 
-** Methodology  **
+***Methodology***
 
 The development consisted of
  1. Capture a behavior data, by driving the car in the simulator. The saved data consists of a snapshot image of the track as viewed by 3 positions (left/center/right) and a steering wheel angle at taken at that image while driving the car. Details of the types of data captured is described below.
@@ -47,11 +47,10 @@ The development consisted of
  Aside: As the data sets grew, training time increased significantly. I migrated from a CPU only training model to a GPU based model. Training times improved very significantly where iteration loops were much shorter and much more satisfactory. I had access to a GPU but found it challenging to install GPU enabled version of tensorflow for use with the car-nd provided environments. I had the latest packages for tensorflow/keras and my code as a result ended up using Keras 2.0 APIs.
 
 
-** Codebase  **
+***Codebase***
 
 The model_nvidia.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
-###Model Architecture and Training Strategy
 
 ***Data Gathering***
 
@@ -64,7 +63,7 @@ Data enrichment:
  5. Add right and left camera images. The simulator provides additional image data but only steering angle data associated with the center image. When using these additional images for training and validation - we must adjust the steering angle as though it was a center image. This took considerable tuning. A number too large resulted in wide oscillations of the car from side to side of the track - too little compensation caused the car to just run off the track. There was no car dimension data provided so the value had to be obtained through trial and error- a better approach if the camera and car geometry provided was to use trigonometry to calculate the exact correction factor to use the data.
 
 
-*** Data Processing ***
+***Data Processing***
  1. Normalizing the data : by dividing the pixels by 255 and set mean to zero
  ```sh
  model.add(Lambda(lambda x: x / 255.0 - 0.5 , input_shape=input_image_shape))
@@ -81,35 +80,35 @@ Data enrichment:
 
 
 
-*** Actual Model ***
+***Actual Model***
 The project was started with the provide data set and LeNet5 model. The model worked well at the start but I could not get it to perform well towards the bridge. I added more data but no improvement. Eventually I switched to the NVidia model where it improved over LeNet5 for my data set.
 
 The model deployed for the final results was the NVidia model.
 Reference: End to End Learning for Self-Driving Cars : https://arxiv.org/pdf/1604.07316v1.pdf
 
 
-| Layer (type)  | Output Shape | Param #
+| Layer (type)  | Output Shape | Param # |
 | ------------- | ------------- |
 |lambda_1 (Lambda)     |        (None, 160, 320, 3)   |     0      |
 |cropping2d_1 (Cropping2D)    |(None, 65, 320, 3)        |0|         
-|conv2d_1 (Conv2D)            |(None, 31, 158, 24)       |1824      
-|activation_1 (Activation)    |(None, 31, 158, 24)       |0         
-|conv2d_2 (Conv2D)            |(None, 14, 77, 36)        |21636     
-|dropout_1 (Dropout)          |(None, 14, 77, 36)        |0         
-|activation_2 (Activation)    |(None, 14, 77, 36)        |0         
-|conv2d_3 (Conv2D)            |(None, 5, 37, 48)         |43248     
-|dropout_2 (Dropout)          |(None, 5, 37, 48)         |0         
-|activation_3 (Activation)    |(None, 5, 37, 48)         |0         
-|conv2d_4 (Conv2D)            |(None, 3, 35, 64)         |27712     
-|dropout_3 (Dropout)          |(None, 3, 35, 64)         |0         
-|activation_4 (Activation)    |(None, 3, 35, 64)         |0         
-|conv2d_5 (Conv2D)            |(None, 1, 33, 64)         |36928     
-|dropout_4 (Dropout)          |(None, 1, 33, 64)         |0        
-|activation_5 (Activation)    |(None, 1, 33, 64)         |0         
-|flatten_1 (Flatten)          |(None, 2112)              |0         
-|h1 (Dense)                   |(None, 100)               |211300    
-|h2 (Dense)                   |(None, 50)                |5050      
-|out (Dense)                  |(None, 1)                 |51        
+|conv2d_1 (Conv2D)            |(None, 31, 158, 24)       |1824   |   
+|activation_1 (Activation)    |(None, 31, 158, 24)       |0     |     
+|conv2d_2 (Conv2D)            |(None, 14, 77, 36)        |21636  |    
+|dropout_1 (Dropout)          |(None, 14, 77, 36)        |0     |     
+|activation_2 (Activation)    |(None, 14, 77, 36)        |0     |     
+|conv2d_3 (Conv2D)            |(None, 5, 37, 48)         |43248  |    
+|dropout_2 (Dropout)          |(None, 5, 37, 48)         |0     |     
+|activation_3 (Activation)    |(None, 5, 37, 48)         |0      |    
+|conv2d_4 (Conv2D)            |(None, 3, 35, 64)         |27712  |    
+|dropout_3 (Dropout)          |(None, 3, 35, 64)         |0      |    
+|activation_4 (Activation)    |(None, 3, 35, 64)         |0      |    
+|conv2d_5 (Conv2D)            |(None, 1, 33, 64)         |36928  |    
+|dropout_4 (Dropout)          |(None, 1, 33, 64)         |0     |    
+|activation_5 (Activation)    |(None, 1, 33, 64)         |0      |    
+|flatten_1 (Flatten)          |(None, 2112)              |0     |     
+|h1 (Dense)                   |(None, 100)               |211300 |    
+|h2 (Dense)                   |(None, 50)                |5050   |    
+|out (Dense)                  |(None, 1)                 |51     |    
 
 
 
@@ -139,7 +138,7 @@ model.add(Dense(50, name="h2" ))
 model.add(Dense(1, name="out"))
 ```
 
- *** Optimiser ***
+ ***Optimiser***
 
  The model was developed to output a target floating point steering angle. Previous networks eg Lenet was developed to categorize a digit using softmax and selecting a target match with the highest probability.
  For this model case the output node of the network as a single node with a predicated fp value. The loss function is a mean squared error.
@@ -148,7 +147,7 @@ model.add(Dense(1, name="out"))
  model.compile(loss='mse',optimizer=adam)
 ```
 
-*** Model overfitting ***
+***Model overfitting***
 
 The model contains dropout layers in order to reduce overfitting, I used a dropout value of 0.5.
 The reference paper for dropout: https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf
@@ -162,11 +161,11 @@ The model was trained and validated on different data sets 80% training/20% vali
 train_samples, validation_samples,train_measurements,validation_measurements = train_test_split(samples_total, measurements,  test_size=0.2)
 ```
 
-*** Model parameter tuning ***
+***Model parameter tuning***
 
 The model used an adam optimizer, I did update the model learning rates but returned to the default learning rate after no major change in performance.
 
-*** Epoch Selection ***
+***Epoch Selection***
 
 In many cases the loss converged or increased after 3 runs. I typically ran for 5 epochs on a new test/data set and re-ran with a lower number of epochs once I could see the approx. are where losses had become converged.
 
@@ -179,14 +178,13 @@ In many cases the loss converged or increased after 3 runs. I typically ran for 
 |5| 0.0110| 0.0121
 
 
-####4. Appropriate training data
+***Appropriate training data***
 
 Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road.
 
 
-###Model Architecture and Training Strategy
+***Model Architecture and Training Strategy***
 
-####1. Solution Design Approach
 
 My first step was to use a convolution neural network model similar to the Lenet ... I thought this model might be appropriate because it is a generic network and performed well on traffic sign classification
 To combat the overfitting, I first added more data.
@@ -198,7 +196,7 @@ The final step was to run the simulator to see how well the car was driving arou
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-####2. Final Model Architecture
+***Final Model Architecture***
 
 The final model architecture consisted of a convolution neural network with the layers and layer sizes shown above.
 
