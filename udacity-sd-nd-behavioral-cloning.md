@@ -58,59 +58,66 @@ The model_nvidia.py file contains the code for training and saving the convoluti
 
 ###Model Architecture and Training Strategy
 
+***Data Gathering***
+
+Data enrichment:
+ The data was enriched by adding
+ 1. Fliped versions of all images
+ 2. Driving the track in reverse.
+ 3. Gather nultiple good runs of data.
+ 4. Gather a large number of recover data- close to edge, turn away.
+ 5. Add right and left camera images. The simulator provides addional image data but only steering angle data assocuated with the center image. When using these addional images for training and validation - we must adjust the steering angle as though it was acenter image. This took considerable tuning. A number too large resulted in wide oscialtions of the car from side to side of the track - too little an compenstaion caused the car to just run off the track. There was no car dimention data provuided so the value ahd to be obtrained through trail and error- a better approach if the camera and car geometry provided was to use triginomentry to calculate the exact correction factor to use the data.
+
+
+*** Data Processing ***
+ 1. Normaling the data : by dividing the pixels by 255 and set mean to zero
+ ```sh
+ model.add(Lambda(lambda x: x / 255.0 - 0.5 , input_shape=input_image_shape))
+ ```
+
+ 2. Croping the image to a subset of the image size to those most likly to be usefull.
+
+ ```sh
+ model.add(Lambda(lambda x: x / 255.0 - 0.5 , input_shape=input_image_shape))
+ model.add(Cropping2D(cropping=((70,25),(0,0))))
+ ```
+
+ 3. Though other corrections were considered eg reduce to grayscale, resize the image, add enriched data via maipulation. It was unnessarty in the end as I was able to get a model to sufficient quality by talking addional simulation data.
+
+
 
 *** Actual Model ***
-####1. An appropriate model architecture has been employed
+The project was started with the provide data set and LeNet5 model. The model worked well at the start but I could not get it to perform well towards the bridge. I added more data but no improvement. Eventually I swithced to the nvidia model where it improved over LeNet5 for my data set.
 
 The model deployed for the final results was the nvidia model.
-
-| Layer (type)           |       Output Shape        |       Param # |   
-=================================================================
-| --- | ---- | ---- |
-
-| lambda_1 (Lambda)       |      (None, 160, 320, 3)  |      0      |  
- --
+Reference:End to End Learning for Self-Driving Cars : https://arxiv.org/pdf/1604.07316v1.pdf
 
 
-_________________________________________________________________
-cropping2d_1 (Cropping2D)    (None, 65, 320, 3)        0         
-_________________________________________________________________
-conv2d_1 (Conv2D)            (None, 31, 158, 24)       1824      
-_________________________________________________________________
-activation_1 (Activation)    (None, 31, 158, 24)       0         
-_________________________________________________________________
-conv2d_2 (Conv2D)            (None, 14, 77, 36)        21636     
-_________________________________________________________________
-dropout_1 (Dropout)          (None, 14, 77, 36)        0         
-_________________________________________________________________
-activation_2 (Activation)    (None, 14, 77, 36)        0         
-_________________________________________________________________
-conv2d_3 (Conv2D)            (None, 5, 37, 48)         43248     
-_________________________________________________________________
-dropout_2 (Dropout)          (None, 5, 37, 48)         0         
-_________________________________________________________________
-activation_3 (Activation)    (None, 5, 37, 48)         0         
-_________________________________________________________________
-conv2d_4 (Conv2D)            (None, 3, 35, 64)         27712     
-_________________________________________________________________
-dropout_3 (Dropout)          (None, 3, 35, 64)         0         
-_________________________________________________________________
-activation_4 (Activation)    (None, 3, 35, 64)         0         
-_________________________________________________________________
-conv2d_5 (Conv2D)            (None, 1, 33, 64)         36928     
-_________________________________________________________________
-dropout_4 (Dropout)          (None, 1, 33, 64)         0         
-_________________________________________________________________
-activation_5 (Activation)    (None, 1, 33, 64)         0         
-_________________________________________________________________
-flatten_1 (Flatten)          (None, 2112)              0         
-_________________________________________________________________
-h1 (Dense)                   (None, 100)               211300    
-_________________________________________________________________
-h2 (Dense)                   (None, 50)                5050      
-_________________________________________________________________
-out (Dense)                  (None, 1)                 51        
-=================================================================
+| Layer (type)  | Output Shape | Param #
+| ------------- | ------------- |
+|lambda_1 (Lambda)     |        (None, 160, 320, 3)   |     0      |
+|cropping2d_1 (Cropping2D)    |(None, 65, 320, 3)        |0|         
+|conv2d_1 (Conv2D)            |(None, 31, 158, 24)       |1824      
+|activation_1 (Activation)    |(None, 31, 158, 24)       |0         
+|conv2d_2 (Conv2D)            |(None, 14, 77, 36)        |21636     
+|dropout_1 (Dropout)          |(None, 14, 77, 36)        |0         
+|activation_2 (Activation)    |(None, 14, 77, 36)        |0         
+|conv2d_3 (Conv2D)            |(None, 5, 37, 48)         |43248     
+|dropout_2 (Dropout)          |(None, 5, 37, 48)         |0         
+|activation_3 (Activation)    |(None, 5, 37, 48)         |0         
+|conv2d_4 (Conv2D)            |(None, 3, 35, 64)         |27712     
+|dropout_3 (Dropout)          |(None, 3, 35, 64)         |0         
+|activation_4 (Activation)    |(None, 3, 35, 64)         |0         
+|conv2d_5 (Conv2D)            |(None, 1, 33, 64)         |36928     
+|dropout_4 (Dropout)          |(None, 1, 33, 64)         |0        
+|activation_5 (Activation)    |(None, 1, 33, 64)         |0         
+|flatten_1 (Flatten)          |(None, 2112)              |0         
+|h1 (Dense)                   |(None, 100)               |211300    
+|h2 (Dense)                   |(None, 50)                |5050      
+|out (Dense)                  |(None, 1)                 |51        
+
+
+
 Total params: 347,749.0
 Trainable params: 347,749.0
 Non-trainable params: 0.0
@@ -126,30 +133,61 @@ print(model.summary())
 
 
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24)
+My model consists of a convolution neural network with 5x5 and 3x3 filter sizes and depths between 24 and 64 (model_nvidia.py lines 161-219)
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18).
+The model includes RELU layers to introduce nonlinearity (eg code line 206), and the data is normalized in the model using a Keras lambda layer.
+
+The fully connected layer:
+```sh
+model.add(Dense(100, name="h1"))
+model.add(Dense(50, name="h2" ))
+model.add(Dense(1, name="out"))
+```
+
+ *** Optimiser ***
+
+ The model was developed to ouput a target floating point steering angle. Previous networks eg Lenet was developed to catagorise a digit using softmax and selecting a target match with the highest probability.
+ For this model case the output node of the network as a single node with a predicated fp value. The loss funcion is a mean squared error.
+ ```sh
+ adam = optimizers.Adam(lr=learning_rate)
+ model.compile(loss='mse',optimizer=adam)
+```
+
+*** Model overfitting ***
+
+The model contains dropout layers in order to reduce overfitting, I used a dropout value of 0.5.
+The refernce paper for dropout: https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf
 
 
+```sh
+model.add(Dropout(dropout_value))
+```
+The model was trained and validated on different data sets 80% training/20% validation - to ensure that the model was not overfitting.  The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+```sh
+train_samples, validation_samples,train_measurements,validation_measurements = train_test_split(samples_total, measurements,  test_size=0.2)
+```
 
+*** Model parameter tuning ***
 
+The model used an adam optimizer, I did update the model learnig rates but returned to the default learning rate after no major change in performance.
 
+*** Epoch Selection ***
 
-####2. Attempts to reduce overfitting in the model
+In many cases the loss convrged or incrased after 3 runs. I typically ran for 5 epochs on a new test/data set and re-ran with a lower number of epochs once I could see the approx are where losses had become coverged.
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21).
+| Epoch | loss | Val_loss  
+| ------------- | ------------- |
+|1    |        0.0804   |     0.0144      |
+|2 | 0.0128 | 0.0144
+|3 | 0.0117|  0.0116
+|4| 0.0111| 0.0109
+|5| 0.0110| 0.0121
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
-
-####3. Model parameter tuning
-
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
 
 ####4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ...
+Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road.
 
-For details about how I created the training data, see the next section.
 
 ###Model Architecture and Training Strategy
 
@@ -157,13 +195,15 @@ For details about how I created the training data, see the next section.
 
 The overall strategy for deriving a model architecture was to ...
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+My first step was to use a convolution neural network model similar to the Lenet ... I thought this model might be appropriate because it is a generic netowrk and performed well on traffic sign classification
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting.
 
-To combat the overfitting, I modified the model so that ...
 
-Then I ...
+To combat the overfitting, I first added more data.
+
+Then I updated to the nvidia model, added dropout and contunied to collect data for areas where the car went off the track. The process was time consuming, in many cases adding new data for a target corner/condition resulted in failing ealier in the track. The approach was to add full data sets of good runs AND new data for area where the track was particularaly different (eg sandbank runoff near bridge)
+
+I do have a concern that I'm contanimated my model in these iterations but in general I was adding more data not changing the network so I dont believe I'm contaminating the netowrk through the updates I make.
 
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
 
@@ -173,34 +213,6 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+Here is a visualization of the architecture
 
 ![alt text][image1]
-
-####3. Creation of the Training Set & Training Process
-
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set.
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
