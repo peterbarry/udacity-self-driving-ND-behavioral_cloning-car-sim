@@ -18,13 +18,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./model.png "Model Visualization"
+
 
 
 
@@ -210,3 +205,8 @@ The final model architecture consisted of a convolution neural network with the 
 Here is a visualization of the architecture
 
 ![alt text][image1]
+
+The model output file was genated by
+```sh
+plot_model(model, to_file='model.png',show_shapes=True)
+```
