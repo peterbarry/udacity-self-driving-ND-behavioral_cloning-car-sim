@@ -20,7 +20,9 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./model.png "Model Visualization"
-
+[image_input]: ./example-image.jpg "Example Image"
+[image_croped]: ./example-image-croped.jpg "Cropped image"
+[image_fliped]: ./example-image-flipped.jpg "Fliped image"
 
 
 
@@ -72,12 +74,33 @@ Data enrichment:
 
  2. Croping the image to a subset of the image size to those most likly to be usefull.
 
+The origonal image from the simulator contain more information than the road which is the key data needed.
+The following shows the inuput data from
+
+![alt text][image_input]
+
+
+The data is cropped to limit the data fed to the model the the road ahead and attemts to remove un-needed data.
+
+![alt text][image_croped]
+
+
+
  ```sh
  model.add(Lambda(lambda x: x / 255.0 - 0.5 , input_shape=input_image_shape))
  model.add(Cropping2D(cropping=((70,25),(0,0))))
- ```
 
- 3. Though other corrections were considered eg reduce to grayscale, resize the image, add enriched data via manipulation. It was unnecessary in the end as I was able to get a model to sufficient quality by talking additional simulation data.
+
+ ```
+ 3. To enrich the data set we also flip images and add to the data set (flip example above)
+
+ ![alt text][image_fliped]
+
+ Since the image is fliped - we multiple the angle for that sample by -1.
+
+ In many cases we ahve images where the stearing angle is zero. A review comment from Udacity suggested that its would be better not to add the flipped images when the angle is zero. I think this is a good idea to have a more balanced data set.
+
+ 4. Though other corrections were considered eg reduce to grayscale, resize the image, add enriched data via manipulation. It was unnecessary in the end as I was able to get a model to sufficient quality by talking additional simulation data.
 
 
 
