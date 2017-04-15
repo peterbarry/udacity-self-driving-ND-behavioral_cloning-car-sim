@@ -201,6 +201,10 @@ In many cases the loss converged or increased after 3 runs. I typically ran for 
 |4| 0.0111| 0.0109
 |5| 0.0110| 0.0121
 
+Comments from Udacity reviewer:
+
+You may want to check out the ModelCheckpoint function from the keras callback functions, it can help you save the model from the best epoch, or the EarlyStopping function which will stop after the model stops to improve over a certain delta.
+
 
 ***Appropriate training data***
 
