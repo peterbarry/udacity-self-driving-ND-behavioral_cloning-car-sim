@@ -99,6 +99,8 @@ The data is cropped to limit the data fed to the model the the road ahead and at
  Since the image is fliped - we multiple the angle for that sample by -1.
 
  In many cases we ahve images where the stearing angle is zero. A review comment from Udacity suggested that its would be better not to add the flipped images when the angle is zero. I think this is a good idea to have a more balanced data set.
+ This is a well known data science issue and more info can be found here:https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis#SMOTE
+ 
 
  4. Though other corrections were considered eg reduce to grayscale, resize the image, add enriched data via manipulation. It was unnecessary in the end as I was able to get a model to sufficient quality by talking additional simulation data.
 
